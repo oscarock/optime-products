@@ -2,17 +2,19 @@
 
 namespace App\Form;
 
+use App\Entity\Products;
 use App\Entity\Categories;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
-class CategoryType extends AbstractType
+class ProductType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -30,12 +32,27 @@ class CategoryType extends AbstractType
                 'label' => 'Descripcion',
                 'attr' => ['class' => 'form-control', 'placeholder' => 'Ingresa la descripcion']
             ])
-            ->add('active', ChoiceType::class, [
-                'choices' => ['Si' => 1, 'No' => 0],
-                'label' => 'Activa',
-                'required' => 'required',
-                'attr' => ['class' => 'form-control', 'placeholder' => 'Activa']
+            ->add('mark', TextType::class, [
+                'label' => 'Marca',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ingresa la marca']
             ])
+            ->add('price', NumberType::class, [
+                'label' => 'Precio',
+                'attr' => ['class' => 'form-control', 'placeholder' => 'Ingresa el precio']
+            ])
+            ->add('category', EntityType::class, array(
+                'label' => 'Categoria',
+                'attr' => ['class' => 'form-control'],
+                'class' => Categories::class,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.active = 1')
+                        ->orderBy('c.name', 'ASC');
+                },
+                'choice_label' => 'name',
+                'mapped' => false,
+                'placeholder' => '--Selecciona la categoria--',
+            ))
             ->add('save', SubmitType::class, [
                 'label' => 'Guardar',
                 'attr' => ['class' => 'btn btn-success form-control mt-3']
@@ -46,7 +63,7 @@ class CategoryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Categories::class,
+            'data_class' => Products::class,
         ]);
     }
 }

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductsController!{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css"/>
+{% endblock %}
+{% block body %}
+	<div class="container">
+    <div class="row">
+      <div class="col-md-12 p-5">
+				{% for flash_message in app.session.flashbag.get('success') %}
+					<div class="alert alert-success" role="alert">
+							{{ flash_message }}
+					</div>
+				{% endfor %}
+				{% for flash_message in app.session.flashbag.get('danger') %}
+					<div class="alert alert-danger" role="alert">
+							{{ flash_message }}
+					</div>
+				{% endfor %}
+				<table id="table-products" class="table table-hover table-bordered dt-responsive nowrap">
+					<thead>
+							<tr>
+								<th>Codigo</th>
+								<th>Nombre</th>
+								<th>Descripcion</th>
+								<th>Marca</th>
+								<th>Precio</th>
+								<th>Categoria</th>
+								<th>Acciones</th>
+							</tr>
+					</thead>
+					<tbody>
+							{% for product in products %}
+						<tr>
+							<td>{{ product.code }}</td>
+							<td>{{ product.name }}</td>
+							<td>{{ product.description }}</td>
+							<td>{{ product.mark }}</td>
+							<td>{{ product.price }}</td>
+							<td>{{ product.getCategory.getName }}</td>
+							<td>
+								<a href="{{ path('edit', {'id': product.id}) }}" title="Editar" class="btn btn-link"><i class="fas fa-edit"></i></a>
+								<a href="{{ path('delete', {'id': product.id}) }}" title="Eliminar" class="btn btn-link" onclick="return confirm('esta seguro de elminar este producto ?')"><i class="fas fa-trash-alt"></i></a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				</div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#table-products').DataTable();
+} );
+</script>
+{% endblock %}

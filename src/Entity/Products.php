@@ -6,6 +6,7 @@ use App\Repository\ProductsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductsRepository::class)
@@ -21,39 +22,61 @@ class Products
 
     /**
      * @ORM\Column(type="string", length=11)
+     * @Assert\NotBlank(message="Codigo no puede estar vacio.")
+     * @Assert\Length(min=4,max = 10, minMessage="Codigo debe tener mas de 4 caracteres.", maxMessage = "Codigo debe tener maximo 10 caracteres.")
+     * @Assert\Regex(
+     *      pattern = "/^[a-z0-9]+$/",
+     *      message="Codigo no puede contener caracteres especiales ni espacios."
+     *  )
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Nombre no puede estar vacio.")
+     * @Assert\Length(min=4, minMessage="Nombre debe tener mas de 4 caracteres.")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="Descripcion no puede estar vacio.")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="Marca no puede estar vacio.")
      */
     private $mark;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="Precio no puede estar vacio.")
+     * @Assert\Regex(
+     *  pattern = "/^[0-9]+$/",
+     *  message="Precio debe ser un numero valido"
+     *  )
      */
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Products::class, inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categories")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     private $category;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Products::class, mappedBy="category")
-     */
-    private $products;
+    public function getCategory(): ?Categories
+    {
+        return $this->category;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
 
     public function __construct()
     {
@@ -121,48 +144,6 @@ class Products
     public function setPrice(float $price): self
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getCategory(): ?self
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?self $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|self[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(self $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(self $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getCategory() === $this) {
-                $product->setCategory(null);
-            }
-        }
 
         return $this;
     }
