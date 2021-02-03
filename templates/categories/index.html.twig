@@ -2,11 +2,53 @@
 
 {% block title %}Hello CategoriesController!{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css"/>
+{% endblock %}
 {% block body %}
-{% for category in categories %}
-    {{ category.code }}
-    {{ category.name }}
-    {{ category.description }}
-    {{ category.active }}
-{% endfor %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 p-5">
+        <table id="example" class="table table-hover table-bordered dt-responsive nowrap">
+          <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for category in categories %}
+            <tr>
+              <td>{{ category.code }}</td>
+              <td>{{ category.name }}</td>
+              <td>{{ category.description }}</td>
+              {% if category.active == 1 %}
+                <td><span class="badge rounded-pill bg-success">Activo</span></td>
+              {% else %}
+                <td><span class="badge rounded-pill bg-danger">Inactivo</span></td>
+              {% endif %}
+              <td>
+                <a href="{{ path('edit', {'id': category.id}) }}" title="Editar" class="btn btn-link btn-sm float-right"><i class="fas fa-edit"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script>
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 p-5 offset-md-3">
+            {{ form_start(form, {'class': 'needs-validation'}) }}
+                {{ form_label(form.code, null, {
+                    'label': 'Codigo'
+                }) }}
+                {{ form_widget(form.code) }}
+                {{ form_errors(form.code) }}
+                {{ form_label(form.name, null, {
+                    'label': 'Nombre'
+                }) }}
+                {{ form_widget(form.name) }}
+                {{ form_errors(form.name) }}
+                {{ form_label(form.description, null, {
+                    'label': 'Descripcion'
+                }) }}
+                {{ form_widget(form.description) }}
+                {{ form_errors(form.description) }}
+                {{ form_row(form.active) }}
+                {{ form_row(form.save, { 'label': 'Submit me' }) }}
+            {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

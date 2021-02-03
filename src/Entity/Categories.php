@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoriesRepository::class)
@@ -19,16 +20,24 @@ class Categories
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Assert\NotBlank(message="Codigo no puede estar vacio.")
+     * @Assert\Regex(
+     *      pattern = "/^[a-z0-9]+$/",
+     *      message="Codigo no puede contener caracteres especiales ni espacios."
+     *  )
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Nombre no puede estar vacio.")
+     * @Assert\Length(min=2, minMessage="Nombre debe tener mas de 2 caracteres.")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="Descripcion no puede estar vacio.")
      */
     private $description;
 
