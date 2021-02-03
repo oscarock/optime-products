@@ -37,7 +37,7 @@
                 <td><span class="badge rounded-pill bg-danger">Inactivo</span></td>
               {% endif %}
               <td>
-                <a href="{{ path('edit', {'id': category.id}) }}" title="Editar" class="btn btn-link btn-sm float-right"><i class="fas fa-edit"></i></a>
+                <a href="{{ path('edit-categories', {'id': category.id}) }}" title="Editar" class="btn btn-link btn-sm float-right"><i class="fas fa-edit"></i></a>
               </td>
             </tr>
             {% endfor %}

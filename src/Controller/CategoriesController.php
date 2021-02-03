@@ -61,7 +61,7 @@ class CategoriesController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="edit")
+     * @Route("/edit-categories/{id}", name="edit-categories")
     */
     public function edit(Request $request, $id)
     {
